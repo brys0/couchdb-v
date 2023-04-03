@@ -1,0 +1,28 @@
+# Binaries for programs and plugins
+main
+couchdb-v
+*.exe
+*.exe~
+*.so
+*.dylib
+*.dll
+.main.v
+# Ignore binary output folders
+bin/
+
+# Ignore common editor/system specific metadata
+.DS_Store
+.idea/
+.vscode/
+*.iml
+
+# ENV
+.env
+
+# # ART PSD
+# art/*.psd
+# art/*.psb
+# vweb and database
+*.Db
+*.js
+*.log
