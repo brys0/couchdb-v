@@ -177,7 +177,6 @@ pub fn (client &Client) update_document[T](document T, rev string, id string, da
 		http.Method.put, json.encode(document), {
 		rev: rev
 	}))!
-	println(response.body)
 	return match response.status_code {
 		201 {
 			json.decode(types.Document, response.body)!.rev
@@ -216,7 +215,6 @@ pub fn (client &Client) update_document_automatically[T](document T, id string, 
 		http.Method.put, json.encode(document), {
 		rev: previous_doc.rev
 	}))!
-	println(response.body)
 	return match response.status_code {
 		201 {
 			json.decode(types.Document, response.body)!.rev
