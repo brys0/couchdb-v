@@ -276,6 +276,8 @@ pub fn (client &Client) get_document[T](id string, database string) !T {
 // get_all_documents
 //
 // Fetches all documents given a database
+//
+//
 pub fn (client &Client) get_all_documents[D](database string) !types.Documents[D] {
 	response := http.fetch(client.gen_fetch_config('${client.host.str()}/${database}/_all_docs',
 		http.Method.get, none, none))!
