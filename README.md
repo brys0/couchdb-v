@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">A CouchDB Client for V</h1>
-<h2 align="center">v0.0.1-PRE-ALPHA</h2>
+<h2 align="center">v0.0.2-PRE-ALPHA</h2>
 Documentation will be created when I feel the project has all the needed features to be ready in production, thanks!
 
 
@@ -32,7 +32,7 @@ Documentation will be created when I feel the project has all the needed feature
 
 ...
 
-<h3>⚠️ This library is very new, behavior is highly experimental! The implmentations of certain functions may change at any time without warning</h3>
+<h3>⚠️ This library is very new, behavior is highly experimental! The implementations of certain functions may change at any time without warning</h3>
 
 
 
