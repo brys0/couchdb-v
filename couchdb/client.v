@@ -169,6 +169,8 @@ pub fn (client &Client) create_document[T](document T, id string, database strin
 //
 // If you have access to the current revision of the document, use this method to update it.
 //
+// If you don't have access to the revision of this document, you can use `update_document_automatically` instead.
+//
 // Returns a revision string for the new document.
 //
 // Possible errors are: `types.InvalidDocument` `types.AdministratorRequired` `types.DocumentDBNotFound` `types.NewerDocumentExists` `IError`
@@ -210,43 +212,13 @@ pub fn (client &Client) update_document[T](document T, rev string, id string, da
 //
 // Possible errors are: `types.InvalidDocument` `types.AdministratorRequired` `types.DocumentDBNotFound` `types.NewerDocumentExists` `IError`
 pub fn (client &Client) update_document_automatically[T](document T, id string, database string) !string {
-	previous_doc := client.get_document[types.Document](id, database)!
-	response := http.fetch(client.gen_fetch_config('${client.host.str()}/${database}/${id}}',
-		http.Method.put, json.encode(document), {
-		rev: previous_doc.rev
-	}))!
-	return match response.status_code {
-		201 {
-			json.decode(types.Document, response.body)!.rev
-		}
-		202 {
-			json.decode(types.Document, response.body)!.rev
-		}
-		400 {
-			types.InvalidDocument{}
-		}
-		401 {
-			types.AdministratorRequired{}
-		}
-		404 {
-			types.DocumentDBNotFound{}
-		}
-		409 {
-			types.NewerDocumentExists{}
-		}
-		else {
-			error(response.body)
-		}
-	}
+	previous_rev := client.get_document[types.Document](id, database)!.rev
+	return client.update_document[T](document, previous_rev, id, database)!
 }
 
 // get_document
 //
-// If you don't have access to the revision of the document, you can use this method to get it automatically and update the document. This uses the `get_document` method internally to fetch the current document revision.
 //
-// Returns a revision string for the new document.
-//
-// Possible errors are: `types.InvalidDocument` `types.AdministratorRequired` `types.DocumentNotFound` `IError`
 pub fn (client &Client) get_document[T](id string, database string) !T {
 	response := http.fetch(client.gen_fetch_config('${client.host.str()}/${database}/${id}',
 		http.Method.get, none, none))!
@@ -292,6 +264,46 @@ pub fn (client &Client) get_all_documents[D](database string) !types.Documents[D
 			error(response.body)
 		}
 	}
+}
+
+// delete_document
+//
+// Deletes a document from the given database with the given id, and revision.
+//
+// If you don't want to bother having the revision data on hand, use `delete_document_automatically` which will handle the revision data automagically.
+//
+// Possible errors are `types.InvalidDocument` `types.AdministratorRequired` `types.DocumentNotFound` `types.NewerDocumentExists` `IError`
+pub fn (client &Client) delete_document(id string, database string, revision string) ! {
+	response := http.fetch(client.gen_fetch_config('${client.host.str()}/${database}/$id', http.Method.get, none, {rev: revision}))!
+	return match response.status_code {
+		400 {
+			return types.InvalidDocument{}
+		}
+		401 {
+			return types.AdministratorRequired{}
+		}
+		404 {
+			return types.DocumentNotFound{}
+		}
+		409 {
+			return types.NewerDocumentExists{}
+		}
+		else {
+			return
+		}
+	}
+}
+
+// delete_document_automatically
+//
+// Deletes a document from the given database with the given id.
+//
+// If you don't have access to the revision of the document, you can use this method instead. It uses the `get_document` method internally to fetch the revision data.
+//
+// Possible errors are `types.InvalidDocument` `types.AdministratorRequired` `types.DocumentNotFound` `types.NewerDocumentExists` `IError`
+pub fn (client &Client) delete_document_automatically(id string, database string) ! {
+	document_rev := client.get_document[types.Document](id, database)!.rev
+	return client.delete_document(id, database, document_rev)!
 }
 
 // new_session
