@@ -1,10 +1,27 @@
 module types
 
-
+interface Any {}
 // Implement this Document for standard behavior!
 pub struct Document {
 pub:
 		rev string [json: _rev]
+}
+
+
+pub struct DocumentFindFilter[T] {
+pub:
+	selector T
+	limit ?int
+	skip ?int
+	sort ?map[string]Any
+	fields ?[]string
+	conflicts ?bool
+	read_quorum ?int [json: r]
+	update ?bool
+	stable ?bool
+	stale ?string
+	execution_stats ?bool
+	// TODO: bookmark, use_index
 }
 
 pub struct Documents[D] {

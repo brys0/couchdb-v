@@ -306,6 +306,12 @@ pub fn (client &Client) delete_document_automatically(id string, database string
 	return client.delete_document(id, database, document_rev)!
 }
 
+pub fn (client &Client) find_document[T](id string, database string, filter types.DocumentFindFilter[T]) {
+	response := http.fetch(client.gen_fetch_config('${client.host.str()}/${database}/_find', http.Method.post, json.encode(filter), none))!
+	// TODO: Finish filters
+}
+
+
 // new_session
 //
 // Private method that authenticates and retrieves the session cookie with CouchDB
@@ -327,6 +333,7 @@ fn (client &Client) new_session(user types.User) !string {
 	}
 	return types.UserNotFound{}
 }
+
 
 // parse_auth_cookie
 //
