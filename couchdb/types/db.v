@@ -1,12 +1,11 @@
 module types
 
-
 pub struct DB {
 pub:
 	name string [json: db_name]
 }
 
-pub struct DBSInfo {
+pub struct DatabaseInfo {
 pub:
 	key  string
 	info DBInfo

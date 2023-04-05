@@ -2,20 +2,22 @@ module couchdb
 
 import term
 
-
 const (
-	name = "CouchDB"
+	name = 'CouchDB(V)'
 )
-pub fn log_info(message string) {
+
+fn log_info(message string) {
 	log(term.blue(message))
 }
 
-pub fn log_warn(message string) {
+fn log_success(message string) {
+	log(term.green(message))
+}
+
+fn log_warn(message string) {
 	log(term.yellow(message))
 }
 
 fn log(message string) {
-	println(term.bright_red(name) + " >> " + message)
+	println(term.bright_red(couchdb.name) + ' >> ' + message)
 }
-
-
