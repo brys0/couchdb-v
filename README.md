@@ -7,6 +7,10 @@
 Documentation will be created when I feel the project has all the needed features to be ready in production, thanks!
 
 
+### Debugging
+
+Use the flag `-dbugcouch` to enable debug/verbose logs for the library
+
 ### Roadmap
 
 ### Tasks
