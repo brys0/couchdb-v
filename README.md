@@ -34,7 +34,8 @@ Use the flag `-dbugcouch` to enable debug/verbose logs for the library
 - [ ] Purge
 - [ ] Get Revs diff
 - [ ] Get Revs limit
-
+### Documentation Website
+Soon ?????
 ...
 
 <h3>⚠️ This library is very new, behavior is highly experimental! The implementations of certain functions may change at any time without warning</h3>
