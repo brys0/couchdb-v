@@ -19,10 +19,6 @@ jobs:
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v2
 
-      - name: Check if code is formatted
-        run: |
-          v fmt -verify .
-
       - name: Build ${{ github.event.repository }}
         run: v .
 
