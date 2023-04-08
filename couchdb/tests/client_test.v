@@ -1,12 +1,12 @@
 module tests
 
 import couchdb
-
+import os
 
 fn test_new_client() {
-	client := couchdb.new_client("http://127.0.0.1:5984") or {
-		panic(err)
-	}
+	url := os.getenv('COUCHDBURL')
 
-	assert client.host.str() == "http://127.0.0.1:5984"
+	client := couchdb.new_client(url) or { panic(err) }
+
+	assert client.host.str() == url
 }

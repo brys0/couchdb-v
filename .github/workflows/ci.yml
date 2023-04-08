@@ -9,7 +9,10 @@ on:
 jobs:
   build:
     runs-on: self-hosted
-
+    env:
+      COUCHDBURL: ${{ secrets.COUCHDBURL }}
+      COUCHDBTESTNAME: ${{ secrets.COUCHDBTESTNAME }}
+      COUCHDBTESTPASS: ${{ secrets.COUCHDBTESTPASS }}
     steps:
       - name: Install V
         uses: vlang/setup-v@v1.3
