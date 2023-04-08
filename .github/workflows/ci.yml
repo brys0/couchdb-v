@@ -19,9 +19,6 @@ jobs:
       - name: Checkout ${{ github.event.repository.name }}
         uses: actions/checkout@v2
 
-      - name: Build ${{ github.event.repository }}
-        run: v .
-
       - name: Run Tests
         run: v test .
 
