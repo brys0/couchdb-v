@@ -14,10 +14,10 @@ pub:
 	selector T
 	limit    ?int
 	skip     ?int
-	// sort ?map[string]Any TODO: Not supported! Cgen error: '_result_Map_string_couchdb__types__Any' undeclared (?) How would I go about doing any types then? (interface Any{} doesn't work: json: couchdb.types.Any is not struct)
-	fields          []string
+	// sort            ?map[string]Any
+	fields          ?[]string
 	conflicts       ?bool
-	read_quorum     ?int     [json: r]
+	read_quorum     ?int      [json: r]
 	update          ?bool
 	stable          ?bool
 	stale           ?string
