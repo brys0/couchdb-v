@@ -22,7 +22,7 @@ Use the flag `-dbugcouch` to enable debug/verbose logs for the library
 - [ ] Design Docs
 - [ ] Get Bulk documents
 - **!!** Find Documents
-  - ⚠️ Partial functionality until https://github.com/vlang/v/issues/17885 is resolved.
+  - ⚠️ Partial functionality
 - [ ] Get Index
 - [ ] Explain
 - [ ] Shards
