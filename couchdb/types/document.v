@@ -3,9 +3,19 @@ module types
 pub struct Any {}
 
 // Implement this Document for standard behavior!
+pub struct DocumentUpdate {
+pub:
+	rev string [json: rev]
+}
+
 pub struct Document {
 pub:
 	rev string [json: _rev]
+}
+
+pub struct TestDocument[D] {
+	rev string [json: _rev]
+	id  string [json: _id]
 }
 
 pub struct Documents[D] {

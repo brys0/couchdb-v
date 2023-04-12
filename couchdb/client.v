@@ -100,6 +100,33 @@ pub fn (client &Client) create_db(name string) !types.DB {
 	}
 }
 
+pub fn (client &Client) delete_db(name string) ! {
+	client.log_if_debug(log_info, 'Deleting database (1/2): ${name}')
+
+	response := http.fetch(client.gen_fetch_config('${client.host.str()}/${name}', http.Method.delete,
+		none, none))!
+
+	client.log_if_debug(log_success, 'Completed a database deletion request (2/2):\n${response.status_code}: ${response.body}')
+
+	match response.status_code {
+		400 {
+			types.InvalidDBName{}
+		}
+		401 {
+			types.AdministratorRequired{}
+		}
+		404 {
+			types.DatabaseNotFound{}
+		}
+		else {
+			if response.status_code < 302 {
+				return
+			}
+			error(response.body)
+		}
+	}
+}
+
 // get_tasks Fetches an array of `types.Task`
 //
 // Possible errors are: `types.AdministratorRequired` `IError`
@@ -179,10 +206,10 @@ pub fn (client &Client) create_document[T](document T, id string, database strin
 
 	return match response.status_code {
 		201 {
-			json.decode(types.Document, response.body)!.rev
+			json.decode(types.DocumentUpdate, response.body)!.rev
 		}
 		202 {
-			json.decode(types.Document, response.body)!.rev
+			json.decode(types.DocumentUpdate, response.body)!.rev
 		}
 		400 {
 			types.InvalidDocument{}
@@ -211,24 +238,33 @@ pub fn (client &Client) create_document[T](document T, id string, database strin
 // Returns a revision string for the new document.
 //
 // Possible errors are: `types.InvalidDocument` `types.AdministratorRequired` `types.DocumentDBNotFound` `types.NewerDocumentExists` `IError`
+// update_document
+//
+// If you have access to the current revision of the document, use this method to update it.
+//
+// If you don't have access to the revision of this document, you can use `update_document_automatically` instead.
+//
+// Returns a revision string for the new document.
+//
+// Possible errors are: `types.InvalidDocument` `types.AdministratorRequired` `types.DocumentDBNotFound` `types.NewerDocumentExists` `IError`
 pub fn (client &Client) update_document[T](document T, rev string, id string, database string) !string {
 	doc_json := json.encode(document)
-
 	client.log_if_debug(log_info, 'Updating document (1/2): ${database}/${id}\n${rev}: ${doc_json}')
 
 	response := http.fetch(client.gen_fetch_config('${client.host.str()}/${database}/${id}',
 		http.Method.put, doc_json, {
-		rev: rev
+		'conflicts': 'true'
+		'rev':       rev
 	}))!
 
 	client.log_if_debug(log_success, 'Completed update document request (2/2):\n${response.status_code}: ${response.body}')
 
 	return match response.status_code {
 		201 {
-			json.decode(types.Document, response.body)!.rev
+			json.decode(types.DocumentUpdate, response.body)!.rev
 		}
 		202 {
-			json.decode(types.Document, response.body)!.rev
+			json.decode(types.DocumentUpdate, response.body)!.rev
 		}
 		400 {
 			types.InvalidDocument{}
@@ -256,7 +292,7 @@ pub fn (client &Client) update_document[T](document T, rev string, id string, da
 //
 // Possible errors are: `types.InvalidDocument` `types.AdministratorRequired` `types.DocumentDBNotFound` `types.NewerDocumentExists` `IError`
 pub fn (client &Client) update_document_automatically[T](document T, id string, database string) !string {
-	client.log_if_debug(log_info, 'Updating document (automatically) (1/1): ${database}/${id}\n${doc_json}')
+	client.log_if_debug(log_info, 'Updating document (automatically) (1/1): ${database}/${id}}')
 
 	previous_rev := client.get_document[types.Document](id, database)!.rev
 
