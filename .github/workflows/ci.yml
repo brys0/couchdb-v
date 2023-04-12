@@ -1,0 +1,27 @@
+name: CI CouchDBV
+
+on:
+  push:
+    branches:
+      - "staging"
+      - "main"
+
+jobs:
+  build:
+    runs-on: self-hosted
+    env:
+      COUCHDBURL: ${{ secrets.COUCHDBURL }}
+      COUCHDBTESTNAME: ${{ secrets.COUCHDBTESTNAME }}
+      COUCHDBTESTPASS: ${{ secrets.COUCHDBTESTPASS }}
+    steps:
+      - name: Install V
+        uses: vlang/setup-v@v1.3
+        with:
+          check-latest: true
+
+      - name: Checkout ${{ github.event.repository.name }}
+        uses: actions/checkout@v2
+
+      - name: Run Tests
+        run: v -enable-globals test .
+
