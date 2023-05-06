@@ -21,7 +21,6 @@ fn testsuite_begin() {
 	client.create_db(tests.db_name)!
 	doc_rev = client.create_document[TestableDocument](create_example_document(), tests.doc_name,
 		tests.db_name)!
-	client.get_all_document_info(tests.db_name)!
 	client.create_document[TestableDocument](create_example_document(), tests.doc_name_automatically,
 		tests.db_name)!
 }
