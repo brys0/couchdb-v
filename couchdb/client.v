@@ -366,7 +366,7 @@ pub fn (client &Client) get_all_documents[D](database string) !types.Documents[D
 	client.log_if_debug(log_info, 'Getting all documents (2/2): ${database}\nExpected Type: ${D.name}')
 
 	response := http.fetch(client.gen_fetch_config('${client.host.str()}/${database}/_all_docs',
-		http.Method.get, none, {'include_docs': true}))!
+		http.Method.get, none, {'include_docs': 'true'}))!
 
 	client.log_if_debug(log_success, 'Completed getting all documents (2/2): ${database}\n${response.status_code}: ${response.body}')
 
