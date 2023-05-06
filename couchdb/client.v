@@ -331,6 +331,31 @@ pub fn (client &Client) get_document[T](id string, database string) !T {
 		}
 	}
 }
+// get_all_document_info
+//
+// Fetches all document info given a database
+//
+//
+pub fn (client &Client) get_all_document_info[D](database string) !types.Documents[D] {
+	client.log_if_debug(log_info, 'Getting all document info (2/2): ${database}')
+
+	response := http.fetch(client.gen_fetch_config('${client.host.str()}/${database}/_all_docs',
+		http.Method.get, none, none))!
+
+	client.log_if_debug(log_success, 'Completed getting all documents (2/2): ${database}\n${response.status_code}: ${response.body}')
+
+	return match response.status_code {
+		200 {
+			json.decode(types.Documents[D], response.body)!
+		}
+		404 {
+				types.DatabaseNotFound{}
+		}
+		else {
+			error(response.body)
+		}
+	}
+}
 
 // get_all_documents
 //
@@ -341,7 +366,7 @@ pub fn (client &Client) get_all_documents[D](database string) !types.Documents[D
 	client.log_if_debug(log_info, 'Getting all documents (2/2): ${database}\nExpected Type: ${D.name}')
 
 	response := http.fetch(client.gen_fetch_config('${client.host.str()}/${database}/_all_docs',
-		http.Method.get, none, none))!
+		http.Method.get, none, {'include_docs': true}))!
 
 	client.log_if_debug(log_success, 'Completed getting all documents (2/2): ${database}\n${response.status_code}: ${response.body}')
 
