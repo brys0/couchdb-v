@@ -1,6 +1,13 @@
 module types
 
-pub struct Any {}
+pub struct DocumentInfo {
+	id string
+	key string
+	value DocumentInfoRevision
+}
+pub struct DocumentInfoRevision {
+	rev string
+}
 
 // Implement this Document for standard behavior!
 pub struct DocumentUpdate {
