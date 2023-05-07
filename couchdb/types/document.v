@@ -1,6 +1,7 @@
 module types
 
 pub struct DocumentInfo {
+pub:
 	id string
 	key string
 	value DocumentInfoRevision
